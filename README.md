@@ -1,5 +1,4 @@
-# stm32f4.zig
-STM32F4 HAL using the Zig Programming Language
+# STM32F4 HAL written in Zig
 
 This is a small experiment for writing a Hardware Abstraction Layer in Zig.  
 For now only the GPIO and RCC works and general register abstraction is given.  
