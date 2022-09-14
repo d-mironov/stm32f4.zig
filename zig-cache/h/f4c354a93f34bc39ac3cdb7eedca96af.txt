@@ -1,0 +1,4 @@
+3466 9307012 1650059992000000000 068c255f33eb5ec31021ae2e95bdbb9f /home/moonraccoon/Documents/Dev/Zig/stm32f4.zig/src/stm32f4.ld
+8280 9441955 1662665382346730697 bddc8ecc81663d924d74940d2bfc1308 /home/moonraccoon/Documents/Dev/Zig/stm32f4.zig/zig-cache/o/316bc7c2e8030b9f56ddfa3ecdf41cdb/vector.o
+37408 0 0 8ee3e2df6d6e26636daa8c04d55c5d70 /home/moonraccoon/Documents/Dev/Zig/stm32f4.zig/zig-cache/o/0e3527af62fb208d21d3b3202df02a4c/firmware.elf.o
+100636 11420041 1662665376742845612 0ae6ce590dd51f8ec10cb10b8544f51e /home/moonraccoon/.cache/zig/o/ed6a6536c4f7b35c74a94116b42cb3dc/libcompiler_rt.a
