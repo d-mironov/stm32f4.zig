@@ -8,7 +8,7 @@ I'm happy to receive some feedback on the code structure and software design in 
 free to contact me (Contact info below).
 
 ### Example usage
-```rust
+```zig
 const board = @import("stm32f411xe.zig");
 const Pin = board.Pin;
 

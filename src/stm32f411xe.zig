@@ -369,30 +369,79 @@ pub const Pin = struct {
 
     const Self = @This();
 
+    /// # Pin - Operation mode
     const Mode = enum {
+        /// # Input mode
         Input,
+        /// # Output mode
         Output,
+        /// # Alternate-function mode
         Alternate,
+        /// # Analog mode
         Analog,
     };
 
+    /// # Pin - Output type
     const OutputType = enum {
+        /// # Push-Pull mode
         PushPull,
+        /// # Open drain mode
         OpenDrain,
     };
 
-    const Speed = enum { Low, Medium, Fast, High };
+    /// # Pin - Speed
+    const Speed = enum {
+        /// # Low Speed
+        Low,
+        /// # Medium Speed
+        Medium,
+        /// # Fast Speed
+        Fast,
+        /// # High Speed
+        High,
+    };
 
+    /// # Pin - Pull mode
     const Pull = enum {
+        /// # No Pull
         None,
+        /// # Pull-Up
         Up,
+        /// # Pull-Down
         Down,
     };
 
+    /// # Pin enable clock on port via RCC
+    /// ---------------------------------------------------------
+    /// Create new Pin on the specified port.  
+    /// The default values are:  
+    /// ```
+    /// {
+    ///     .pin = 0,
+    ///     .mode = .Output,
+    ///     .outtype = .PushPull,
+    ///     .speed = .Low,
+    ///     .pull = .None,
+    ///     ._clk_en = false,
+    /// }
+    /// ```
+    /// Args:
+    /// > `port`: Port to use
+    /// > `pin`: pin to use (0 <= `pin` <= 15)
+    /// Return:
+    /// > `Pin`: returns the `Pin` object.
     pub fn new(port: gpio_t, pin: u32) Self {
         return Self{ .port = port, .pin = pin };
     }
 
+    /// # Pin enable clock on port via RCC
+    /// ---------------------------------------------------------
+    /// Enables the clock on the pin.  
+    /// ---------------------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn clock_enable(self: *Self) void {
         if (self._clk_en) {
             return;
@@ -408,6 +457,16 @@ pub const Pin = struct {
         self._clk_en = true;
     }
 
+    /// # Pin configure pin speed
+    /// ---------------------------------------------------------
+    /// Configures the speed of the pin.  
+    /// Possible modes: `Low`, `Medium`, `Fast`, `High`.
+    /// ---------------------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// > `m`: `Speed`: Speed to configure
+    /// Return:
+    /// > `void`
     pub fn set_speed(self: *Self, spd: Speed) void {
         self.speed = spd;
         self.clock_enable();
@@ -429,6 +488,16 @@ pub const Pin = struct {
         }
     }
 
+    /// # Pin configure pull mode for output
+    /// ---------------------------------------------------------
+    /// Configures the pull of the pin.  
+    /// Possible modes: `None`, `Up`, `Down`.
+    /// ---------------------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// > `m`: `Pull`: Pull to configure
+    /// Return:
+    /// > `void`
     pub fn set_pull(self: *Self, pupdr: Pull) void {
         self.pull = pupdr;
         self.clock_enable();
@@ -447,6 +516,16 @@ pub const Pin = struct {
         }
     }
 
+    /// # Pin configure mode 
+    /// ---------------------------------------------------------
+    /// Configures the pin to selected mode.  
+    /// Possible modes: `Output`, `Input`, `Alternate`, `Analog`.
+    /// ---------------------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// > `m`: `Mode`: Mode to configure
+    /// Return:
+    /// > `void`
     pub fn set_mode(self: *Self, m: Mode) void {
         self.mode = m;
         self.clock_enable();
@@ -466,30 +545,85 @@ pub const Pin = struct {
         }
     }
 
+    /// # Pin configure as Output 
+    /// ----------------------------------------------
+    /// Configures the pin in **Output** mode
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn make_output(self: *Self) void {
         self.set_mode(.Output);
     }
 
+    /// # Pin configure as Input
+    /// ----------------------------------------------
+    /// Configures the pin in **Input** mode
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn make_input(self: *Self) void {
         self.set_mode(.Input);
     }
 
+    /// # Pin configure as analog
+    /// ----------------------------------------------
+    /// Configures the pin in **Analog** mode
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn make_analog(self: *Self) void {
         self.set_mode(.Analog);
     }
 
+    /// # Pin configure as alternate function
+    /// ----------------------------------------------
+    /// Configures the pin as Alternate-function mode
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn make_alternate(self: *Self) void {
         self.set_mode(.Alternate);
     }
 
+    /// # Pin write to pin 
+    /// ----------------------------------------------
+    /// Writes the specified value to the pin
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// > `val`: `1` or `0` (1-bit value to write)
+    /// Return:
+    /// > `void`
     pub fn write(self: Self, val: u1) void {
         self.port.odr.modify(if (val == 1) .Set else .Clear, Bit[self.pin]);
     }
 
+    /// # Pin digital read
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `bool`: `true` if pin is high, else `false`.
     pub fn read(self: Self) bool {
         return self.port.idr.read(Bit[self.pin]);
     }
 
+    /// # Pin toggle
+    /// ----------------------------------------------
+    /// Toggles the pin's output value
+    /// ----------------------------------------------
+    /// Args:
+    /// > `self`: self
+    /// Return:
+    /// > `void`
     pub fn toggle(self: Self) void {
         self.port.odr.xor(Bit[self.pin]);
     }
