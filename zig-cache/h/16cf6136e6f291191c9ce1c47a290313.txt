@@ -1,4 +1,0 @@
-3466 29536627 1650059993016135680 068c255f33eb5ec31021ae2e95bdbb9f /home/moonraccoon/Documents/Dev/zig/stm32f4.zig/src/stm32f4.ld
-8240 1473889 1650376156315756435 87547668039523c85bce823ff040beb9 /home/moonraccoon/Documents/Dev/zig/stm32f4.zig/zig-cache/o/215d84e1ce3398f642cfe2f179d436d9/vector.o
-23408 0 0 fbbf5b29f2c5b76577ae9d85e8428008 /home/moonraccoon/Documents/Dev/zig/stm32f4.zig/zig-cache/o/ad5d63532c0f69c7d18c20a0a771bd88/firmware.elf.o
-100636 16784721 1650374851989081312 9c8d0b1002db193eaa73f7bfc6fabdb5 /home/moonraccoon/.cache/zig/o/6fe21c5b8e9051ad47721cd16194c384/libcompiler_rt.a
