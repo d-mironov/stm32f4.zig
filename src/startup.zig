@@ -1,4 +1,5 @@
 const main = @import("main.zig");
+const InterruptVector = @import("stm32f411.zig").InterruptVector;
 
 // These symbols come from the linker script
 extern const _data_loadaddr: u32;
@@ -7,7 +8,7 @@ extern const _edata: u32;
 extern var _bss: u32;
 extern const _ebss: u32;
 
-export fn resetHandler() void {
+fn resetHandler() void {
     // Copy data from flash to RAM
     const data_loadaddr = @ptrCast([*]const u8, &_data_loadaddr);
     const data = @ptrCast([*]u8, &_data);

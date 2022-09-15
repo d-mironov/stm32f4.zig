@@ -1,0 +1,6 @@
+[submodule "libs/regz"]
+	path = libs/regz
+	url = https://github.com/ZigEmbeddedGroup/regz
+[submodule "libs/microzig"]
+	path = libs/microzig
+	url = https://github.com/ZigEmbeddedGroup/microzig

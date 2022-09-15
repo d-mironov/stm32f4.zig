@@ -1,34 +1,43 @@
-const Builder = @import("std").build.Builder;
-const builtin = @import("builtin");
 const std = @import("std");
+const Builder = std.build.Builder;
 
-pub fn build(b: *Builder) void {
-    // Target STM32F407VG
-    const target = .{
-        .cpu_arch = .thumb,
-        .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m4 },
-        .os_tag = .freestanding,
-        .abi = .eabihf,
+const microzig = @import("libs/microzig/src/main.zig");
+const chips = microzig.chips;
+const cpus = microzig.cpus;
+const Backing = microzig.Backing;
+const Chip = microzig.Chip;
+const EmbeddedExecutable = microzig.EmbeddedExecutable;
+
+const stm32f411 = Chip{
+    .name = "STM32F411",
+    .path = "src/stm32f411.zig",
+    .cpu = cpus.cortex_m4,
+    .memory_regions = &.{
+        .{ .offset = 0x08000000, .length = (512 * 1024), .kind = .flash },
+        .{ .offset = 0x20000000, .length = (128 * 1024), .kind = .ram },
+    },
+};
+
+pub fn build(b: *Builder) !void {
+    const backing = .{
+        .chip = stm32f411,
     };
 
-    // Standard release options allow the person running `zig build` to select
-    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
-    const mode = b.standardReleaseOptions();
+    const release_mode = b.standardReleaseOptions();
 
-    const elf = b.addExecutable("firmware.elf", "src/startup.zig");
-    elf.setTarget(target);
-    elf.setBuildMode(mode);
+    var exe = microzig.addEmbeddedExecutable(
+        b,
+        "firmware",
+        "src/main.zig",
+        backing,
+        .{},
+    );
 
-    const vector_obj = b.addObject("vector", "src/vector.zig");
-    vector_obj.setTarget(target);
-    vector_obj.setBuildMode(mode);
+    exe.setBuildMode(release_mode);
+    exe.install();
 
-    elf.addObject(vector_obj);
-    elf.setLinkerScriptPath(.{ .path = "src/stm32f4.ld" });
-
-    const bin = b.addInstallRaw(elf, "firmware.bin", .{});
-    const bin_step = b.step("bin", "Generate binary file to be flashed");
-    bin_step.dependOn(&bin.step);
+    const bin = b.addInstallRaw(exe.inner, "firmware.bin", .{});
+    b.getInstallStep().dependOn(&bin.step);
 
     const flash_cmd = b.addSystemCommand(&[_][]const u8{
         "pyocd",
@@ -47,7 +56,4 @@ pub fn build(b: *Builder) void {
     const flash_step = b.step("flash", "Build, flash and run the binary on your STM32F411CEUx");
     flash_step.dependOn(&flash_cmd.step);
     flash_step.dependOn(&size.step);
-
-    b.default_step.dependOn(&elf.step);
-    b.installArtifact(elf);
 }
